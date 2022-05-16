@@ -75,7 +75,7 @@ pub async fn check_todo(client: &Client, list_id: i32, item_id: i32) -> Result<b
 
     let result = client.query(&statement, &[&list_id, &item_id])
         .await
-        .expect("Error getting items");
+        .map_err(AppError::db_error)?;
 
     match result  {
         ref updated => Ok(true),
