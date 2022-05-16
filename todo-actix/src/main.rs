@@ -3,6 +3,7 @@ mod models;
 mod configs;
 mod handlers;
 mod db;
+mod errors;
 
 use crate::handlers::*;
 
