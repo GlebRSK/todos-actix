@@ -20,4 +20,5 @@ jobs:
       working-directory: ./todo-actix
       run: cargo build --verbose
     - name: Run tests
+      working-directory: ./todo-actix
       run: cargo test --verbose
