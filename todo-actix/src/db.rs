@@ -2,7 +2,6 @@ use crate::models::{TodoList, TodoItem};
 use crate::errors::{AppError, AppErrorType};
 
 use deadpool_postgres::Client;
-use std::io;
 use tokio_pg_mapper::FromTokioPostgresRow;
 
 
@@ -76,9 +75,9 @@ pub async fn check_todo(client: &Client, list_id: i32, item_id: i32) -> Result<b
     let result = client.query(&statement, &[&list_id, &item_id])
         .await
         .map_err(AppError::db_error)?;
-
+    
     match result  {
-        ref updated => Ok(true),
-        _           => Ok(false)
+        ref _updated => Ok(true),
+        //_            => Ok(false)
     }
 }
