@@ -37,7 +37,7 @@ jobs:
     - name: Build
       working-directory: ./todo-actix
       run: cargo build --verbose
-    -name: Copy .env file
+    - name: Copy .env file
       working-directory: ./todo-actix
       run: cp .env.github .env
     - name: Run tests
