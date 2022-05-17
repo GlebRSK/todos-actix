@@ -14,11 +14,32 @@ jobs:
 
     runs-on: ubuntu-latest
     
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd phg_isready --health-interva 10s --health timeout 5s --health-retries 5
     steps:
     - uses: actions/checkout@v3
+    - name: Install diesel_cli
+      working-directory: ./todo-actix
+      run: cargo install diesel_cli --no-default-features --features postgres
+    - name: Run migrations
+      working-directory: ./todo-actix
+      run: diesel migration run
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
     - name: Build
       working-directory: ./todo-actix
       run: cargo build --verbose
+    -name: Copy .env file
+      working-directory: ./todo-actix
+      run: cp .env.github .env
     - name: Run tests
       working-directory: ./todo-actix
       run: cargo test --verbose
