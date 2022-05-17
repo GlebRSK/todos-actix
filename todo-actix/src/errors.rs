@@ -2,7 +2,6 @@ use serde::Serialize;
 use actix_web::{error::ResponseError, http::StatusCode, HttpResponse};
 use std::fmt;
 
-
 #[derive(Debug)]
 pub enum AppErrorType { // errors enum
     DBError,
@@ -71,6 +70,7 @@ impl ResponseError for AppError {
 mod tests {
 
     use super::{AppError, AppErrorType};
+
     #[test]
     fn test_default_message() {
         let db_error: AppError = AppError {
@@ -78,7 +78,6 @@ mod tests {
             cause: None,
             error_type: AppErrorType::DBError
         };
-
         assert_eq!(
             db_error.message(),
             "An unexpected error has occured".to_string(),
@@ -94,7 +93,6 @@ mod tests {
             cause: None,
             error_type: AppErrorType::DBError
         };
-
         assert_eq!(
             db_error.message(),
             custom_message,

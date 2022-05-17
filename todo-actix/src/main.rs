@@ -1,4 +1,3 @@
-// psql -h 127.0.0.1 -p 5432 -U postgres postgres
 mod models;
 mod configs;
 mod handlers;
@@ -13,8 +12,7 @@ use dotenv::dotenv;
 use slog::{info};
 
 #[actix_rt::main]
-async fn main() -> std::io::Result<()> {
-    
+async fn main() -> std::io::Result<()> {    
     dotenv().ok();
 
     let config = Config::from_env().unwrap();
@@ -50,6 +48,7 @@ mod integration_tests {
     use crate::models::{AppState, TodoList};
     use crate::configs::Config;
     use crate::handlers::*;
+
     use actix_web::{App, web, test, http};
     use dotenv::dotenv;
     use lazy_static::lazy_static;
@@ -72,12 +71,9 @@ mod integration_tests {
     
     #[actix_rt::test]
     async fn test_get_todos() {
-        
-
         let app = App::new()
             .app_data(web::Data::new(APP_STATE.clone()))
             .route("/todos{_:/?}", web::get().to(get_todos));
-
         let mut app = test::init_service(app).await;
         let req = test::TestRequest::get()
             .uri("/todos")
@@ -89,7 +85,6 @@ mod integration_tests {
 
     #[actix_rt::test]
     async fn test_create_todos() {
-        
         let app = App::new()
             .app_data(web::Data::new(APP_STATE.clone()))
             .route("/todos{_:/?}", web::get().to(get_todos))
@@ -107,12 +102,10 @@ mod integration_tests {
             .to_request();
 
         let res = test::call_service(&mut app, req).await;
-
         assert_eq!(res.status(), 200, "POST /todos shold return status 200");
 
         let body = test::read_body(res).await;
         let try_created: Result<TodoList, serde_json::error::Error> = serde_json::from_slice(&body);
-
         assert!(try_created.is_ok(), "Response couldn't be parsed");
 
         let created_list = try_created.unwrap();
@@ -123,11 +116,9 @@ mod integration_tests {
             .to_request();
 
         let todo_list: Vec<TodoList> = test::call_and_read_body_json(&mut app, req).await;
-
         let maybe_todo = todo_list
             .iter()
             .find(|todo| todo.id == created_list.id);
-
         assert!(maybe_todo.is_some(), "Todo list is not found");
     }
 }
